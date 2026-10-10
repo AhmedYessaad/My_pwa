@@ -1,0 +1,28 @@
+{
+  "id": "./",
+  "name": "ميزانيتي - إدارة الميزانية الشخصية",
+  "short_name": "ميزانيتي",
+  "description": "تابع دخلك ومصاريفك الشهرية بالدينار الجزائري.",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f5fb",
+  "theme_color": "#6d28d9",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

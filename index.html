@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#6d28d9">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ميزانيتي">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+<title>ميزانيتي</title>
+<style>
+:root{--bg:#f6f5fb;--card:#fff;--ink:#201a2d;--muted:#746d80;--purple:#6d28d9;--line:#ebe7f2;--green:#16835d;--red:#c2414b}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(135deg,#6d28d9,#4c1d95);color:#fff;padding:24px 18px 28px;border-radius:0 0 24px 24px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}h1{font-size:24px;margin:0}header p{margin:6px 0 0;color:#e9ddff;font-size:13px}
+select,input,button{font:inherit}header select{background:#ffffff20;color:#fff;border:1px solid #ffffff55;border-radius:10px;padding:8px;max-width:145px}
+header option{color:#222}.wrap{max-width:650px;margin:auto;padding:14px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:-10px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 4px 18px #28134a08}
+.metric small{color:var(--muted);font-size:12px}.metric strong{display:block;font-size:22px;margin-top:7px;overflow-wrap:anywhere}.metric .sub{font-size:11px;color:var(--muted);margin-top:5px}
+.wide{margin-top:12px}.section-title{display:flex;align-items:center;justify-content:space-between;margin:20px 2px 10px;font-weight:750}
+.progress{height:9px;background:#eee8f8;border-radius:99px;overflow:hidden;margin-top:12px}.bar{height:100%;width:0;background:var(--purple);border-radius:99px;transition:width .2s}
+form{display:grid;grid-template-columns:1fr 1fr;gap:9px}label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px;color:var(--ink);min-width:0}input:focus,select:focus{outline:2px solid #c4b5fd;border-color:var(--purple)}.full{grid-column:1/-1}
+button{border:0;border-radius:11px;padding:12px 14px;cursor:pointer;font-weight:700}.primary{background:var(--purple);color:white}.secondary{background:#f0eafd;color:var(--purple)}.danger{background:#fff0f0;color:var(--red);padding:7px 10px;font-size:12px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}.muted{color:var(--muted);font-size:12px}.amount{font-weight:750;white-space:nowrap}.expense-list{display:flex;flex-direction:column;gap:8px}.expense{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);padding:12px;border-radius:13px}.emoji{width:40px;height:40px;border-radius:12px;background:#f2ecff;display:grid;place-items:center;font-size:19px;flex-shrink:0}.expense-info{flex:1;min-width:0}.expense-info strong{display:block;font-size:14px;overflow-wrap:anywhere}.expense-info small{color:var(--muted);font-size:11px}.expense-actions{display:flex;flex-direction:column;align-items:flex-end;gap:6px}.positive{color:var(--green)}.negative{color:var(--red)}.empty{text-align:center;padding:22px;color:var(--muted);font-size:13px}.category-row{display:flex;align-items:center;gap:8px;margin:11px 0}.category-row .name{width:85px;font-size:12px}.category-row .track{height:8px;flex:1;background:#f0edf5;border-radius:99px;overflow:hidden}.category-row .track div{height:100%;background:#8b5cf6;border-radius:99px}.category-row .amount{font-size:12px}.note{font-size:11px;color:var(--muted);line-height:1.6;margin-top:10px}.tabs{display:flex;gap:8px;margin:14px 0}.tabs button{flex:1;background:#eae5f5;color:#635772}.tabs button.active{background:#6d28d9;color:white}.hidden{display:none!important}
+@media(min-width:520px){.grid{grid-template-columns:repeat(4,1fr)}.metric strong{font-size:19px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="top"><div><h1>ميزانيتي</h1><p>تابع مصاريفك، وافهم أين تذهب أموالك</p></div><select id="monthSelect" aria-label="الشهر"></select></div>
+</header>
+<div class="wrap">
+ <div class="grid">
+  <div class="card metric"><small>الدخل الشهري</small><strong id="incomeView">0 دج</strong><div class="sub">الراتب والمداخيل الإضافية</div></div>
+  <div class="card metric"><small>المصاريف</small><strong id="spentView">0 دج</strong><div class="sub">مجموع ما سجلته</div></div>
+  <div class="card metric"><small>المتبقي</small><strong id="remainingView">0 دج</strong><div class="sub">الدخل ناقص المصاريف</div></div>
+  <div class="card metric"><small>الادخار الفعلي</small><strong id="savingView">0 دج</strong><div class="sub">بعد خصم المصاريف</div></div>
+ </div>
+ <div class="card wide">
+  <div class="row"><strong>استهلاك الميزانية</strong><span id="percentView" class="muted">0%</span></div>
+  <div class="progress"><div class="bar" id="budgetBar"></div></div>
+  <div class="row" style="margin-top:10px"><span class="muted">هدف الادخار</span><strong id="goalView">0 دج</strong></div>
+  <div id="goalStatus" class="muted" style="margin-top:4px"></div>
+ </div>
+ <div class="tabs"><button class="active" data-tab="add">إضافة مصروف</button><button data-tab="report">التقرير</button><button data-tab="settings">الإعدادات</button></div>
+ <section id="tab-add">
+  <div class="section-title">سجّل عملية شراء</div>
+  <div class="card">
+   <form id="expenseForm">
+    <div><label for="amount">المبلغ (دج) *</label><input id="amount" type="number" min="1" step="1" placeholder="مثال: 250" required></div>
+    <div><label for="category">الفئة</label><select id="category"><option>طعام ومشروبات</option><option>النقل</option><option>المنزل</option><option>ملابس</option><option>الهاتف والإنترنت</option><option>الصحة</option><option>الترفيه</option><option>التسوق</option><option>العمل</option><option>أخرى</option></select></div>
+    <div class="full"><label for="description">ماذا اشتريت؟ (اختياري)</label><input id="description" maxlength="100" placeholder="مثال: قهوة، تذكرة حافلة..."></div>
+    <div><label for="date">التاريخ</label><input id="date" type="date" required></div>
+    <div style="display:flex;align-items:end"><button class="primary full" type="submit">+ تسجيل المصروف</button></div>
+   </form>
+   <p class="note">نصيحة: سجّل المصروف مباشرة بعد الشراء حتى لا تنساه. هذا التطبيق لا يتصل بحسابك البنكي؛ أنت تدخل الأرقام بنفسك.</p>
+  </div>
+  <div class="section-title"><span>مصاريف الشهر</span><span class="muted" id="countView">0 عملية</span></div>
+  <div id="expenseList" class="expense-list"></div>
+ </section>
+ <section id="tab-report" class="hidden">
+  <div class="section-title">ملخص الشهر</div>
+  <div class="card"><div id="categoryReport"></div><div id="reportEmpty" class="empty">سجّل بعض المصاريف لعرض التقرير.</div></div>
+  <div class="section-title">الأرقام الأساسية</div>
+  <div class="card" id="reportStats"></div>
+  <button class="secondary wide" id="exportBtn" style="width:100%">تصدير سجل المصاريف CSV</button>
+  <p class="note">يمكن فتح ملف CSV في Excel أو Google Sheets. التقرير يعتمد فقط على المصاريف المسجلة داخل التطبيق.</p>
+ </section>
+ <section id="tab-settings" class="hidden">
+  <div class="section-title">إعدادات الميزانية</div>
+  <div class="card">
+   <form id="settingsForm">
+    <div class="full"><label for="income">الدخل الشهري (دج)</label><input id="income" type="number" min="0" step="1" placeholder="مثال: 57500" required></div>
+    <div class="full"><label for="goal">هدف الادخار الشهري (دج)</label><input id="goal" type="number" min="0" step="1" placeholder="مثال: 15000" required></div>
+    <div class="full"><button class="primary" type="submit" style="width:100%">حفظ إعدادات هذا الشهر</button></div>
+   </form>
+   <p class="note">يمكنك تغيير الدخل والهدف لكل شهر على حدة. أدخل مكافآت أو مداخيل إضافية ضمن دخل الشهر الذي استلمتها فيه.</p>
+  </div>
+  <div class="section-title">البيانات</div>
+  <div class="card">
+   <p class="muted">بياناتك محفوظة محليًا على هذا الجهاز في المتصفح.</p>
+   <button id="backupBtn" class="secondary" style="width:100%">نسخ احتياطي للبيانات (JSON)</button>
+   <button id="clearBtn" class="danger" style="width:100%;margin-top:9px">حذف جميع بيانات التطبيق</button>
+  </div>
+ </section>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+const money=n=>new Intl.NumberFormat('ar-DZ',{maximumFractionDigits:0}).format(n||0)+' دج';
+const monthKey=d=>d.slice(0,7);
+const today=new Date();
+const localDate=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`};
+let db;
+try{db=JSON.parse(localStorage.getItem('mizani-db')||'{"months":{},"expenses":[]}')}catch(e){db={months:{},expenses:[]}}
+if(!db.months)db.months={}; if(!db.expenses)db.expenses=[];
+let selected=localDate().slice(0,7);
+$('date').value=localDate();
+const categories={'طعام ومشروبات':'🍽️','النقل':'🚌','المنزل':'🏠','ملابس':'👕','الهاتف والإنترنت':'📱','الصحة':'💊','الترفيه':'🎮','التسوق':'🛍️','العمل':'🧰','أخرى':'📦'};
+function monthData(k=selected){if(!db.months[k])db.months[k]={income:0,goal:0};return db.months[k]}
+function save(){localStorage.setItem('mizani-db',JSON.stringify(db));render()}
+function monthExpenses(){return db.expenses.filter(x=>monthKey(x.date)===selected).sort((a,b)=>b.date.localeCompare(a.date)||b.created-a.created)}
+function renderMonthOptions(){
+ const s=$('monthSelect');s.innerHTML='';
+ const keys=new Set([selected,...Object.keys(db.months),...db.expenses.map(x=>monthKey(x.date))]);
+ const start=new Date();for(let i=0;i<18;i++){const d=new Date(start.getFullYear(),start.getMonth()-i,1);keys.add(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`)}
+ [...keys].sort().reverse().forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=new Date(k+'-02').toLocaleDateString('ar-DZ',{month:'long',year:'numeric'});s.append(o)});s.value=selected;
+}
+function render(){
+ renderMonthOptions();const m=monthData(),ex=monthExpenses(),spent=ex.reduce((s,x)=>s+x.amount,0),remaining=m.income-spent,percent=m.income>0?Math.round(spent/m.income*100):0;
+ $('incomeView').textContent=money(m.income);$('spentView').textContent=money(spent);$('remainingView').textContent=money(remaining);$('remainingView').className=remaining<0?'negative':'positive';$('savingView').textContent=money(Math.max(0,remaining));$('percentView').textContent=percent+'%';$('budgetBar').style.width=Math.min(100,Math.max(0,percent))+'%';$('goalView').textContent=money(m.goal);
+ $('goalStatus').textContent=remaining<0?'تجاوزت دخلك المسجل بمقدار '+money(-remaining):remaining>=m.goal?'أنت عند هدف الادخار أو فوقه.':'تحتاج إلى '+money(m.goal-remaining)+' إضافية للوصول إلى هدف الادخار.';
+ $('countView').textContent=ex.length+' عملية';const list=$('expenseList');list.innerHTML='';
+ if(!ex.length)list.innerHTML='<div class="card empty">لا توجد مصاريف مسجلة لهذا الشهر.</div>';
+ ex.forEach(x=>{const el=document.createElement('div');el.className='expense';const emoji=document.createElement('div');emoji.className='emoji';emoji.textContent=categories[x.category]||'📦';const info=document.createElement('div');info.className='expense-info';const strong=document.createElement('strong');strong.textContent=x.description||x.category;const small=document.createElement('small');small.textContent=x.category+' • '+x.date;info.append(strong,small);const actions=document.createElement('div');actions.className='expense-actions';const amt=document.createElement('span');amt.className='amount';amt.textContent=money(x.amount);const del=document.createElement('button');del.className='danger';del.textContent='حذف';del.onclick=()=>{if(confirm('هل تريد حذف هذا المصروف؟')){db.expenses=db.expenses.filter(y=>y.id!==x.id);save()}};actions.append(amt,del);el.append(emoji,info,actions);list.append(el)});
+ const totals={};ex.forEach(x=>totals[x.category]=(totals[x.category]||0)+x.amount);const report=$('categoryReport');report.innerHTML='';const pairs=Object.entries(totals).sort((a,b)=>b[1]-a[1]);
+ $('reportEmpty').classList.toggle('hidden',pairs.length>0);
+ pairs.forEach(([cat,val])=>{const r=document.createElement('div');r.className='category-row';const name=document.createElement('span');name.className='name';name.textContent=(categories[cat]||'📦')+' '+cat;const track=document.createElement('div');track.className='track';const bar=document.createElement('div');bar.style.width=(spent?val/spent*100:0)+'%';track.append(bar);const amt=document.createElement('span');amt.className='amount';amt.textContent=money(val);r.append(name,track,amt);report.append(r)});
+ $('reportStats').innerHTML=`<div class="row"><span class="muted">عدد العمليات</span><strong>${ex.length}</strong></div><hr style="border:0;border-top:1px solid var(--line)"><div class="row"><span class="muted">متوسط المصروف لكل عملية</span><strong>${money(ex.length?Math.round(spent/ex.length):0)}</strong></div><hr style="border:0;border-top:1px solid var(--line)"><div class="row"><span class="muted">أعلى فئة إنفاقًا</span><strong>${pairs.length?pairs[0][0]:'—'}</strong></div><hr style="border:0;border-top:1px solid var(--line)"><div class="row"><span class="muted">المتبقي من الدخل</span><strong class="${remaining<0?'negative':'positive'}">${money(remaining)}</strong></div>`;
+ $('income').value=m.income||'';$('goal').value=m.goal||'';
+}
+$('monthSelect').addEventListener('change',e=>{selected=e.target.value;render()});
+$('expenseForm').addEventListener('submit',e=>{e.preventDefault();const amount=Number($('amount').value);if(!Number.isFinite(amount)||amount<=0)return alert('أدخل مبلغًا صحيحًا.');const date=$('date').value||localDate();db.expenses.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),amount,category:$('category').value,description:$('description').value.trim(),date,created:Date.now()});selected=monthKey(date);$('amount').value='';$('description').value='';save()});
+$('settingsForm').addEventListener('submit',e=>{e.preventDefault();monthData().income=Math.max(0,Number($('income').value)||0);monthData().goal=Math.max(0,Number($('goal').value)||0);save();alert('تم حفظ إعدادات الشهر.')});
+document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>x.classList.toggle('active',x===b));['add','report','settings'].forEach(t=>$('tab-'+t).classList.toggle('hidden',t!==b.dataset.tab));}));
+function download(name,content,type){const blob=new Blob([content],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+$('exportBtn').onclick=()=>{const rows=[['date','amount_DZD','category','description'],...monthExpenses().map(x=>[x.date,x.amount,x.category,x.description])];const csv='\ufeff'+rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(',')).join('\r\n');download('mizani-'+selected+'.csv',csv,'text/csv;charset=utf-8;')};
+$('backupBtn').onclick=()=>download('mizani-backup.json',JSON.stringify(db,null,2),'application/json');
+$('clearBtn').onclick=()=>{if(confirm('سيتم حذف كل الدخل والمصاريف المحفوظة نهائيًا من هذا المتصفح. هل أنت متأكد؟')){db={months:{},expenses:[]};save()}};
+render();
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) { window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {})); }
+</script>
+</body>
+</html>
